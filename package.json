@@ -1,0 +1,13 @@
+{
+  "name": "chia-garden",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.141.0"
+  },
+  "type": "module"
+}

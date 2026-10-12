@@ -1,0 +1,7 @@
+{
+  "name": "chia",
+  "account_id": "fd5dc6cb4ee9d4c592a39318b76edd2a",
+  "compatibility_date": "2026-10-11",
+  "assets": { "directory": "./public", "not_found_handling": "single-page-application" },
+  "routes": [{ "pattern": "chia.elskatemm.com", "custom_domain": true }]
+}
