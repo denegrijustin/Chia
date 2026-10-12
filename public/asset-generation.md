@@ -39,3 +39,7 @@ Final gravity correction prompt: preserve exact canvas/layout/likeness, correct 
 ## Complete mature canopies for every pet
 
 Built-in identity-preserving image edits produce `mature-courtney.png`, `mature-sunglasses.png`, and `mature-hockey.png` as standalone transparent photographs alongside `mature-justin.png`. Prompt: extract only the rightmost mature portrait from its atlas; preserve likeness, clay, lighting and real chia texture; reconstruct all cropped leaves, show full canopy and hanging tips with transparent margins, keep roots on upper planting surfaces and eyes clear, include full pedestal, no adjacent portraits or text. All four mature phases now use the complete image rather than a column crop.
+
+## Standalone seedling and young portraits
+
+Built-in identity-preserving image generation produces `seedling-{courtney,justin,sunglasses,hockey}.png` and `young-{courtney,justin,sunglasses,hockey}.png` in this folder. Prompt set: extract only the left sparse-seedling or middle short-cotyledon portrait from its reference, preserve likeness/clay/pose/lighting, include the full sculpture and every sprout with transparent margins, reconstruct clipped tips, exclude adjacent portraits and all leftover leaf strips. Roots only upper/forward planting surfaces; forehead and eyes clear. Real macro product photography with genuine alpha. Every growth phase is now a standalone complete portrait. Shared image columns are no longer used by the app.
