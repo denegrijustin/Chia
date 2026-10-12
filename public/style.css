@@ -14,3 +14,7 @@
 .foliage-sway{transform-origin:var(--root-x) var(--root-y);animation:foliage-bend 5.5s ease-in-out infinite alternate}
 @keyframes foliage-bend{0%{transform:rotate(-.5deg) skewX(-.3deg)}100%{transform:rotate(.7deg) skewX(.5deg)}}
 @media(prefers-reduced-motion:reduce){.foliage-sway{animation:none}}
+
+.rooted-shoot{transform-origin:var(--root-x) var(--root-y);animation:shoot-breeze 6s ease-in-out infinite alternate}
+@keyframes shoot-breeze{from{transform:skewX(-.6deg)}to{transform:skewX(.8deg)}}
+@media(prefers-reduced-motion:reduce){.rooted-shoot{animation:none}}
