@@ -35,3 +35,7 @@ Final gravity correction prompt: preserve exact canvas/layout/likeness, correct 
 ## Justin canopy framing correction
 
 `mature-justin.png` is a standalone transparent mature portrait made with built-in image generation. Prompt: extract only the mature rightmost Justin sculpture, preserve likeness/clay/lighting/leaf texture, reconstruct clipped leaves on both sides, include the complete canopy and pedestal with transparent margins, keep roots on upper planting surfaces and eyes clear. This replaces the tight atlas crop for stages 9–14.
+
+## Complete mature canopies for every pet
+
+Built-in identity-preserving image edits produce `mature-courtney.png`, `mature-sunglasses.png`, and `mature-hockey.png` as standalone transparent photographs alongside `mature-justin.png`. Prompt: extract only the rightmost mature portrait from its atlas; preserve likeness, clay, lighting and real chia texture; reconstruct all cropped leaves, show full canopy and hanging tips with transparent margins, keep roots on upper planting surfaces and eyes clear, include full pedestal, no adjacent portraits or text. All four mature phases now use the complete image rather than a column crop.
