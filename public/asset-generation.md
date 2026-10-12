@@ -31,3 +31,7 @@ Atlas prompt: preserve portrait likeness, clay, camera and lighting in three equ
 Overgrown prompt: preserve the terracotta portrait and add tall branching Salvia hispanica, a dense irregular canopy, flower spikes and gravity-curved outer stems cascading from roots above. Keep forehead, eyes and glasses unobstructed. Macro studio product photography; no drawn or repeated rigid stems. Transparent background.
 
 Final gravity correction prompt: preserve exact canvas/layout/likeness, correct root placement only. Seeds and roots exist only on upper and upper forward-facing planting surfaces. Remove them from undersides, lower side hair, ears, face, neck, shoulders and pedestal. Long stems hang from upper roots. Cover front upper hair while keeping forehead and eyes clear. Preserve photographic texture, contact shadows and alpha.
+
+## Justin canopy framing correction
+
+`mature-justin.png` is a standalone transparent mature portrait made with built-in image generation. Prompt: extract only the mature rightmost Justin sculpture, preserve likeness/clay/lighting/leaf texture, reconstruct clipped leaves on both sides, include the complete canopy and pedestal with transparent margins, keep roots on upper planting surfaces and eyes clear. This replaces the tight atlas crop for stages 9–14.

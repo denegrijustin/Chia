@@ -7,5 +7,6 @@ export const photoAtlases={courtney:{width:1536,height:1024,crops:[[0,512],[512,
 export const overgrownPhotos={sunglasses:{width:1199,height:1312,split:435},hockey:{width:1240,height:1269,split:370},courtney:{width:1186,height:1326,split:430},justin:{width:1156,height:1361,split:480}};
 export function photoFrame(growth,id){if(growth<20)return null;const atlas=photoAtlases[id];if(!atlas)return null;
  const late=overgrownPhotos[id];if(growth>=1600&&late){return {x:0,width:late.width,height:late.height,atlasWidth:late.width,phase:3,split:late.split,asset:'overgrown-'+id,plantScale:1+Math.log1p((growth-1600)/1500)*.42};}
+ if(id==='justin'&&growth>=500)return {x:0,width:1145,height:1374,atlasWidth:1145,phase:2,split:450,asset:'mature-justin',plantScale:1+(growth-500)/1100*.28};
  const phase=growth<100?0:growth<500?1:2;const [x,width]=atlas.crops[phase];const splits={courtney:[260,290,310],justin:[300,320,340],sunglasses:[245,250,280],hockey:[190,210,225]};
  const start=[20,100,500][phase],span=[80,400,1100][phase];return {x,width,height:atlas.height,atlasWidth:atlas.width,phase,split:splits[id][phase],plantScale:1+(growth-start)/span*.28};}

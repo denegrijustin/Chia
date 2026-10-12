@@ -19,7 +19,7 @@ function sprouts(){
  const pixelScale=Math.min(480/frame.width,580/frame.height),top=frame.split*(1-frame.plantScale),total=frame.height-top;
  const viewport=node('svg',{x:320-frame.width*pixelScale/2,y:510-total*pixelScale,width:frame.width*pixelScale,height:total*pixelScale,viewBox:`${frame.x} ${top} ${frame.width} ${total}`,preserveAspectRatio:'none',overflow:'hidden'});
  const defs=node('defs',{});
- for(const [id,y,height] of [['photo-lower',frame.split,frame.height-frame.split],['photo-upper',0,frame.split]]){const crop=node('clipPath',{id,clipPathUnits:'userSpaceOnUse'});crop.append(node('rect',{x:frame.x,y,width:frame.width,height}));defs.append(crop);}viewport.append(defs);
+ for(const [id,y,height] of [['photo-lower',frame.split-2,frame.height-frame.split+2],['photo-upper',0,frame.split+2]]){const crop=node('clipPath',{id,clipPathUnits:'userSpaceOnUse'});crop.append(node('rect',{x:frame.x,y,width:frame.width,height}));defs.append(crop);}viewport.append(defs);
  const href=`/${frame.asset??'growth-'+garden.active}.png`;
  viewport.append(node('image',{href,x:0,y:0,width:frame.atlasWidth,height:frame.height,preserveAspectRatio:'none','clip-path':'url(#photo-lower)'}));
  const crown=node('g',{transform:`translate(0 ${top}) scale(1 ${frame.plantScale})`,style:`filter:${pet.seed==='ruby'?'hue-rotate(305deg) saturate(.7)':pet.seed==='clover'?'hue-rotate(7deg) brightness(1.08)':'none'}`});
