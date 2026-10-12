@@ -10,11 +10,13 @@ test('four portrait pets have independent state and existing gardens gain new op
 import {stageFor} from '../public/growth.js';
 test('growth continues after the first full coat',()=>{assert.equal(stageFor(0).number,1);assert.equal(stageFor(100).number,6);assert.equal(stageFor(750).number,10);assert.equal(stageFor(1000).number,11);const p={...freshPet(100000),planted:true,growth:100,moisture:90};assert.ok(advance(p,100000+60000).growth>100);assert.ok(advance(p,100000+3600000).growth>1000);});
 
-import {photoFrame,photoAtlases} from '../public/growth.js';
-test('photo stages use bounded portrait crops and preserve seed state',()=>{for(const id of Object.keys(photoAtlases)){assert.equal(photoFrame(8,id),null);assert.equal(photoFrame(20,id).phase,0);assert.equal(photoFrame(100,id).phase,1);assert.equal(photoFrame(500,id).phase,2);for(const growth of [20,100,500,1000]){const f=photoFrame(growth,id);assert.ok(f.x>=0&&f.x+f.width<=f.atlasWidth);assert.ok(f.height>0);}}});
+import {photoFrame,maturePhotos as photoAtlases} from '../public/growth.js';
+test('photo stages use complete portrait frames and preserve seed state',()=>{for(const id of Object.keys(photoAtlases)){assert.equal(photoFrame(8,id),null);assert.equal(photoFrame(20,id).phase,0);assert.equal(photoFrame(100,id).phase,1);assert.equal(photoFrame(500,id).phase,2);for(const growth of [20,100,500,1000]){const f=photoFrame(growth,id);assert.ok(f.x>=0&&f.x+f.width<=f.atlasWidth);assert.ok(f.height>0);}}});
 
 test('twenty-five stages never require trimming or cap growth',()=>{assert.equal(stageFor(3100).number,25);let p={...freshPet(100000),planted:true,growth:4000,moisture:90};p=advance(p,160000);assert.ok(p.growth>4000);assert.equal(restorePet(p,160000).growth,p.growth);const fed=care({...p,leaves:10},'feed',160000).pet;assert.ok(fed.growth>p.growth);assert.equal(stageFor(10000).number,25);});
 
 test('photographic canopy grows without scaling the eyes or face',()=>{for(const id of Object.keys(photoAtlases)){const a=photoFrame(1600,id),b=photoFrame(3100,id),c=photoFrame(10000,id);assert.equal(a.phase,3);assert.ok(b.plantScale>a.plantScale);assert.ok(c.plantScale>b.plantScale);assert.ok(a.split>0&&a.split<a.height);}});
 
 test('every mature canopy uses its complete image without an atlas crop',()=>{for(const id of Object.keys(photoAtlases))for(const g of [500,750,1000,1599]){const f=photoFrame(g,id);assert.equal(f.x,0);assert.equal(f.width,f.atlasWidth);assert.equal(f.asset,'mature-'+id);}});
+
+test('seedling and young phases cannot contain pixels from a neighboring stage',()=>{for(const id of Object.keys(photoAtlases))for(const g of [20,50,99,100,180,499,500,1599,1600,3100]){const f=photoFrame(g,id);assert.equal(f.x,0);assert.equal(f.width,f.atlasWidth);assert.ok(!f.asset.startsWith('growth-'));assert.ok(f.asset.endsWith('-'+id));}});
