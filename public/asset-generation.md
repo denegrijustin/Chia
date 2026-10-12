@@ -19,3 +19,15 @@ Built-in image generation, transparent PNG overlays; the app preserves the origi
 - Mature: dense rounded afro-like chia canopy, tiny oval leaves and natural varied stem angles, longer perimeter stems bend and droop downward, open lower center to preserve the face, genuine transparent background. A background-only edit removed empty-region glow while retaining foliage.
 
 Ten stages change germination, density, stem height, crown width and the mature canopy over time. Virtual seed colors apply a subtle display-only color filter.
+
+## Integrated photographic growth replacement
+
+Built-in image generation, identity-preserving edits of the four portrait busts. The app now uses complete photographic plant-and-clay composites instead of drawn stems or canopy overlays.
+
+Final files: `growth-courtney.png`, `growth-justin.png`, `growth-sunglasses.png`, `growth-hockey.png` (three photographic phases each), and corresponding `overgrown-*.png` files (untamed mature growth). All reside alongside this document in `public/`.
+
+Atlas prompt: preserve portrait likeness, clay, camera and lighting in three equal columns: sparse cotyledons, dense short coat, tall mature chia with natural veined leaves and curved stems. Keep the face and eyes unobstructed. Roots and shadows integrate with the curved upper scalp and front planting surface. Transparent background.
+
+Overgrown prompt: preserve the terracotta portrait and add tall branching Salvia hispanica, a dense irregular canopy, flower spikes and gravity-curved outer stems cascading from roots above. Keep forehead, eyes and glasses unobstructed. Macro studio product photography; no drawn or repeated rigid stems. Transparent background.
+
+Final gravity correction prompt: preserve exact canvas/layout/likeness, correct root placement only. Seeds and roots exist only on upper and upper forward-facing planting surfaces. Remove them from undersides, lower side hair, ears, face, neck, shoulders and pedestal. Long stems hang from upper roots. Cover front upper hair while keeping forehead and eyes clear. Preserve photographic texture, contact shadows and alpha.

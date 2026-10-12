@@ -1,32 +1,11 @@
-// First coat at 100; ten stages continue to 1000. Normalized stages: rooted seedlings, elongating stems, and an outward-bending canopy.
-const clamp=n=>Math.max(0,Math.min(1,n));
-const smooth=n=>{const t=clamp(n);return t*t*(3-2*t);};
-export function foliage(growth,scalp){
- const g=clamp(growth/100),extra=clamp((growth-100)/900),young=smooth((g-.27)/.23),mature=smooth((g-.58)/.3);
- const rootY=scalp.y+5;
- return [
-  {stage:'seedling',opacity:smooth((g-.08)/.12)*(1-young),width:scalp.rx*(1.9+g*.2),height:22+g*45,rootY},
-  {stage:'young',opacity:young*(1-mature),width:scalp.rx*(2.05+g*.55),height:55+g*70,rootY:rootY+10},
-  {stage:'mature',opacity:mature,width:scalp.rx*(2.45+g*.55+extra*1.4),height:105+g*85+extra*150,rootY:rootY+12}
- ];
-}
+// Twenty-five care stages; growth continues beyond the last stage.
+export const stages=[{at:0,name:'Seeds'},{at:8,name:'Germinating'},{at:20,name:'Cotyledons'},{at:40,name:'Upright shoots'},{at:70,name:'Filling in'},{at:100,name:'Full coat'},{at:180,name:'Tall growth'},{at:300,name:'Wide canopy'},{at:500,name:'Bending outward'},{at:750,name:'Overgrown canopy'},...['New branches','Larger leaves','Leafy crown','Arching stems','Trailing edges','Thick canopy','Long tendrils','Cascading sides','Untamed growth','Broad crown','Dense foliage','Wild canopy','Trailing branches','Overgrown garden','Still growing'].map((name,i)=>({at:1000+i*150,name}))];
+export function stageFor(growth){const g=Math.max(0,Number.isFinite(growth)?growth:0);let index=0;for(let i=0;i<stages.length;i++)if(g>=stages[i].at)index=i;const start=stages[index].at;const next=stages[index+1]?.at??start+(Math.floor((g-start)/150)+1)*150;const cycleStart=stages[index+1]?start:next-150;return {...stages[index],number:index+1,progress:Math.min(100,Math.max(0,(g-cycleStart)/(next-cycleStart)*100)),next};}
 
-export const stages=[{at:0,name:'Seeds'},{at:8,name:'Germinating'},{at:20,name:'Cotyledons'},{at:40,name:'Upright shoots'},{at:70,name:'Filling in'},{at:100,name:'Full coat'},{at:180,name:'Tall growth'},{at:300,name:'Wide canopy'},{at:500,name:'Bending outward'},{at:750,name:'Overgrown afro'}];
-export function stageFor(growth){const g=Math.max(0,Math.min(1000,growth));let index=0;for(let i=0;i<stages.length;i++)if(g>=stages[i].at)index=i;const next=stages[index+1]?.at??1000;return {...stages[index],number:index+1,progress:Math.min(100,Math.max(0,(g-stages[index].at)/(next-stages[index].at)*100)),next};}
-
-// Individual rooted stems: height leads growth; gravity bends older tips sideways.
-export function shoots(growth,scalp){
- const age=clamp(growth/1000),early=clamp(growth/100),bend=smooth((age-.28)/.65);
- const count=Math.round(60+early*220+age*100),out=[];
- const rand=i=>{const n=Math.sin(i*127.1+37.7)*43758.5453;return n-Math.floor(n);};
- for(let i=0;i<count;i++){
-  const a=i*2.399963,r=Math.sqrt((i+.5)/count),dx=Math.cos(a)*scalp.rx*.88*r;
-  const y=scalp.y+Math.sin(a)*scalp.ry*.5*r-10+Math.pow(dx/scalp.rx,2)*22;
-  const variation=.35+rand(i)*.85,height=(4+early*45+age*145)*variation;
-  const side=dx/scalp.rx,lean=side*(8+age*30)+ (rand(i+400)-.5)*12;
-  const droop=bend*(35+Math.abs(side)*65)*variation;
-  const x=scalp.x+dx,tipX=x+lean+side*bend*65,tipY=Math.min(scalp.y+8,y-height+droop);
-  out.push({x,y,height,tipX,tipY,bend,side,shade:rand(i+800),size:Math.min(6.5,1.2+early*2.6+age*2),d:`M${x} ${y} C${x+lean*.15} ${y-height*.65} ${x+lean*.65} ${y-height-18*bend} ${tipX} ${tipY}`});
- }
- return out.sort((a,b)=>a.y-b.y);
-}
+// Photographic atlases replace the synthetic stems. Each crop contains roots and clay together.
+export const photoAtlases={courtney:{width:1536,height:1024,crops:[[0,512],[512,512],[1024,512]]},justin:{width:1536,height:1024,crops:[[0,512],[512,512],[1024,512]]},sunglasses:{width:1774,height:887,crops:[[0,594],[594,580],[1174,600]]},hockey:{width:1944,height:809,crops:[[0,685],[685,617],[1302,642]]}};
+export const overgrownPhotos={sunglasses:{width:1199,height:1312,split:435},hockey:{width:1240,height:1269,split:370},courtney:{width:1186,height:1326,split:430},justin:{width:1156,height:1361,split:480}};
+export function photoFrame(growth,id){if(growth<20)return null;const atlas=photoAtlases[id];if(!atlas)return null;
+ const late=overgrownPhotos[id];if(growth>=1600&&late){return {x:0,width:late.width,height:late.height,atlasWidth:late.width,phase:3,split:late.split,asset:'overgrown-'+id,plantScale:1+Math.log1p((growth-1600)/1500)*.42};}
+ const phase=growth<100?0:growth<500?1:2;const [x,width]=atlas.crops[phase];const splits={courtney:[260,290,310],justin:[300,320,340],sunglasses:[245,250,280],hockey:[190,210,225]};
+ const start=[20,100,500][phase],span=[80,400,1100][phase];return {x,width,height:atlas.height,atlasWidth:atlas.width,phase,split:splits[id][phase],plantScale:1+(growth-start)/span*.28};}
