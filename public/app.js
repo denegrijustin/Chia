@@ -1,0 +1,30 @@
+import {freshPet,restorePet,advance,care} from './model.js';
+const $=id=>document.getElementById(id),key='chia.garden.v1';let pet=freshPet(),canSave=true,timer,audio;
+try{pet=restorePet(JSON.parse(localStorage.getItem(key)));}catch{pet=freshPet();}
+pet=advance(pet);const svgNS='http://www.w3.org/2000/svg';
+function node(tag,attrs){const el=document.createElementNS(svgNS,tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));return el;}
+function save(){try{localStorage.setItem(key,JSON.stringify(pet));}catch{canSave=false;$('save-note').textContent='Saving unavailable in this browser. Keep this tab open.';}}
+function toast(message){if(!message)return;$('toast').textContent=message;$('toast').classList.add('show');clearTimeout(timer);timer=setTimeout(()=>$('toast').classList.remove('show'),3500);}
+function chime(){if(!pet.sound)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();[523,659,784].forEach((freq,i)=>{let osc=audio.createOscillator(),gain=audio.createGain(),t=audio.currentTime+i*.08;osc.type='sine';osc.frequency.value=freq;gain.gain.setValueAtTime(0,t);gain.gain.linearRampToValueAtTime(.055,t+.025);gain.gain.exponentialRampToValueAtTime(.001,t+.45);osc.connect(gain);gain.connect(audio.destination);osc.start(t);osc.stop(t+.5);});}catch{}}
+function sprouts(){const target=$('sprouts');target.replaceChildren();if(!pet.planted)return;let level=pet.growth/100;
+ for(let i=0;i<110;i++){let a=i*2.39996,r=Math.sqrt((i+.5)/110),x=281+Math.cos(a)*117*r,y=189+Math.sin(a)*76*r;
+  if(level<.13){target.append(node('ellipse',{cx:x,cy:y,rx:1.8,ry:1,fill:'#66442e',opacity:.8}));continue;}
+  const size=3+level*24+(i%5),g=node('g',{class:'sprout',style:`animation-delay:-${i%7}s;animation-duration:${3+i%4}s`});const color=['#4f773c','#638847','#385e31','#82a557','#6e934a'][i%5];
+  g.append(node('path',{d:`M${x} ${y}q${(i%3)-1} ${-size/2} 0 ${-size}`,fill:'none',stroke:'#527340','stroke-width':1+level}));
+  g.append(node('path',{d:`M${x} ${y-size*.4}q${-size*.8} ${-size*.85} ${-size*.55} ${-size*1.05}q${size*.72} ${size*.04} ${size*.55} ${size*1.05}M${x} ${y-size*.7}q${size*.8} ${-size*.85} ${size*.58} ${-size*1.1}q${-size*.75} ${size*.02} ${-size*.58} ${size*1.1}`,fill:color,stroke:'#355c2d','stroke-width':.4}));target.append(g);
+ }
+}
+for(let i=0;i<85;i++){$('clay-texture').append(node('circle',{cx:157+(i*47%259),cy:122+(i*31%166),r:.55+(i%3)*.25,'clip-path':'url(#growth-area)'}));}
+let drawn=-1;
+function render(){const g=Math.floor(pet.growth);$('pet-name').textContent=pet.name;$('rename').setAttribute('aria-label',`Rename ${pet.name}`);$('growth-value').textContent=`${g}%`;$('growth-bar').style.width=`${pet.growth}%`;$('growth-label').textContent=!pet.planted?'Your first planting':g>=100?'Ready for a fresh start':'A little greener every day';
+ $('stage').textContent=!pet.planted?'Ready to plant':g<15?'Seeds settling in':g<40?'First little sprouts':g<75?'Getting fluffy':g<100?'Almost a green cloud':'Fully grown';
+ $('moisture').textContent=!pet.planted?'Not planted':pet.moisture<15?'Thirsty':pet.moisture>85?'Well watered':`${Math.round(pet.moisture)}% · happy`;$('light').textContent=pet.sunny?'Sunny':'Shaded';$('scene').classList.toggle('shaded',!pet.sunny);$('sunlight').innerHTML=`<span>☼</span> ${pet.sunny?'Move to shade':'Find some sun'}`;
+ $('pet-message').textContent=!pet.planted?'Every little garden starts with a seed.':pet.moisture<15?`${pet.name} could use a little drink.`:g>=100?`${pet.name} is a whole little garden now.`:g<25?'Something small and lovely is on its way.':g<70?'A little care. A little greener.':'Look at all that lovely green.';
+ $('plant').hidden=pet.planted;$('water').hidden=!pet.planted||g>=100;$('water').disabled=Date.now()-pet.lastWater<15000||pet.moisture>=92;$('feed').disabled=!pet.planted||pet.leaves<5||g>=100;$('harvest').hidden=g<100;$('leaves').textContent=pet.leaves;$('age').textContent=`Day ${Math.max(1,Math.floor((Date.now()-pet.created)/86400000)+1)}`;$('sound').setAttribute('aria-label',`Turn sound ${pet.sound?'off':'on'}`);$('sound').title=`Sound ${pet.sound?'on':'off'}`;$('sound').style.background=pet.sound?'#dbe5c7':'transparent';
+ if(drawn!==g){sprouts();drawn=g;}$('pet-svg').setAttribute('aria-label',`Terracotta hedgehog ${pet.name}, ${g}% chia growth`);
+}
+for(const action of ['plant','water','feed','sunlight','harvest']){$(action).addEventListener('click',()=>{const result=care(pet,action),changed=JSON.stringify(result.pet)!==JSON.stringify(pet);pet=result.pet;save();render();toast(result.message);if(changed&&result.message){chime();if(action==='water'){const drops=$('drops');drops.replaceChildren();for(let i=0;i<12;i++)drops.append(node('path',{class:'drop',d:`M${190+i*17} 105q-8 12 0 13q8-1 0-13`,fill:'#79adb7',style:`animation-delay:${i*.045}s`}));$('scene').classList.add('watering');setTimeout(()=>{$('scene').classList.remove('watering');drops.replaceChildren();},1500);}}});}
+$('sound').addEventListener('click',()=>{pet.sound=!pet.sound;save();render();chime();});
+$('help').addEventListener('click',()=>$('help-dialog').showModal());document.querySelector('#help-dialog .close').addEventListener('click',()=>$('help-dialog').close());document.querySelector('.close-help').addEventListener('click',()=>$('help-dialog').close());
+$('rename').addEventListener('click',()=>{$('new-name').value=pet.name;$('name-dialog').showModal();$('new-name').focus();});document.querySelector('#name-dialog .close').addEventListener('click',()=>$('name-dialog').close());document.querySelector('#name-dialog form').addEventListener('submit',e=>{const name=$('new-name').value.trim();if(!name){e.preventDefault();$('new-name').setCustomValidity('Give your friend a name.');$('new-name').reportValidity();return;}pet.name=name;save();render();toast(`Hello, ${name}.`);});$('new-name').addEventListener('input',()=>$('new-name').setCustomValidity(''));
+render();save();setInterval(()=>{pet=advance(pet);render();},1000);setInterval(save,10000);document.addEventListener('visibilitychange',()=>{pet=advance(pet);save();render();});window.addEventListener('pagehide',save);
